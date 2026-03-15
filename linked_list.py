@@ -10,7 +10,8 @@ class Node:
         - Assign the provided 'data' to an instance variable.
         - Initialize 'next' to None.
         """
-        pass
+        self.data = data
+        self.next = None
 
 
 class LinkedList:
@@ -23,7 +24,7 @@ class LinkedList:
         TODO:
         - Initialize 'head' to None to represent an empty list.
         """
-        pass
+        self.head = None
 
     def insert_at_front(self, data):
         """
@@ -32,7 +33,9 @@ class LinkedList:
         - Insert it at the front of the list (head).
         - Update 'head' to the new node.
         """
-        pass
+        new_node = Node(data=data)
+        new_node.next = self.head
+        self.head = new_node
 
     def insert_at_end(self, data):
         """
@@ -41,7 +44,23 @@ class LinkedList:
         - Traverse to the end of the list.
         - Set the last node's 'next' reference to the new node.
         """
-        pass
+
+        new_node = Node(data=data)
+
+        # edge case - list is empty
+        if self.head is None:
+            self.head = new_node
+            return
+
+        # initialize current node
+        current_node = self.head
+        while current_node.next:
+            current_node = current_node.next
+
+        # now we're at end of list
+        current_node.next = new_node
+
+        
 
     def recursive_sum(self):
         """
@@ -52,7 +71,15 @@ class LinkedList:
           2. Otherwise, returns node.data + recursive call on node.next.
         - Return the total sum.
         """
-        pass
+
+        def node_sum(node):
+            if node is None:
+                return 0
+            return node.data + node_sum(node.next)
+        
+        return node_sum(self.head)
+
+
 
     def recursive_reverse(self):
         """
@@ -64,7 +91,18 @@ class LinkedList:
           3. Otherwise, swap pointers and recurse.
         - Update 'head' to the returned new head.
         """
-        pass
+        
+        def helper(prev, current):
+            if current is None:
+                self.head = prev
+                return self
+            current_next = current.next
+            current.next = prev # set current node 'next' to previous node
+            return helper(current, current_next) # advance the node recursion
+        
+        return helper(prev=None, current=self.head)
+
+        
 
     def recursive_search(self, target):
         """
@@ -75,7 +113,14 @@ class LinkedList:
           2. Returns True if current node's data == target.
           3. Otherwise, recurse on the next node.
         """
-        pass
+
+        def helper(node):
+            if node is None:
+                return False
+            if node.data == target:
+                return True
+            return helper(node.next)
+        return helper(self.head)
 
     def display(self):
         """
@@ -84,4 +129,14 @@ class LinkedList:
         - Traverse from 'head' and collect each node's data.
         - Format output as 'val -> val -> val -> None' or similar.
         """
-        pass
+        current_node = self.head
+        if current_node is None:
+            return 'None'
+        
+        output = f"{current_node.data}"
+        while current_node.next:
+            current_node = current_node.next
+            output += f" -> {current_node.data}"
+        output += ' -> None'
+
+        return output
